@@ -42,6 +42,7 @@ input,select{font-family:inherit;color:inherit}
 .btn.on{border-color:var(--accent);color:var(--accent)}
 .btn:disabled{opacity:.35;pointer-events:none}
 .btn svg{display:block}
+a.btn{color:inherit;text-decoration:none}
 #marquee{position:absolute;display:none;border:1.5px dashed var(--accent);background:var(--accent-soft);pointer-events:none;z-index:5;border-radius:3px}
 .row{display:flex;gap:6px;flex-wrap:wrap}
 
@@ -65,14 +66,7 @@ input,select{font-family:inherit;color:inherit}
 .sw{width:27px;height:27px;border-radius:50%;position:relative;cursor:pointer;border:1px solid rgba(0,0,0,.22);box-shadow:inset 0 2px 3px rgba(255,255,255,.35),inset 0 -3px 4px rgba(0,0,0,.22);justify-self:center}
 .sw::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--panel);box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.25)}
 .sw.on{outline:2.5px solid var(--accent);outline-offset:2px}
-.customwrap{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-#customColor{width:27px;height:27px;border:none;border-radius:50%;padding:0;cursor:pointer;background:conic-gradient(red,orange,yellow,lime,cyan,blue,magenta,red)}
-#customColor::-webkit-color-swatch-wrapper{padding:3px}
-#customColor::-webkit-color-swatch{border-radius:50%;border:1px solid rgba(0,0,0,.25)}
 .caption{font-size:11px;color:var(--muted)}
-.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-bottom:4px}
-.seg button{flex:1;padding:6px 0;font-size:12px;background:var(--panel)}
-.seg button.on{background:var(--accent);color:#fff}
 .subhead{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:12px 0 7px}
 .posrow{display:flex;align-items:center;gap:6px;margin-bottom:6px}
 .poslabel{width:86px;flex:none;font-size:11.5px;color:var(--muted)}
@@ -101,6 +95,10 @@ body.dark #stage{background:radial-gradient(1300px 800px at 50% 12%,#262421 0%,#
 #emptyCard h3{font-size:18px;font-weight:600;margin-bottom:8px}
 #emptyCard p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:16px}
 #emptyCard .tip{font-size:11px;margin-top:14px;margin-bottom:0}
+#demoRow{display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+#demoRow .caption{display:block;margin-top:8px;margin-bottom:0}
+#demoRow a{color:var(--accent);text-decoration:none}
+#demoRow a:hover{text-decoration:underline}
 
 /* drop overlay */
 #dropzone{position:absolute;inset:10px;border:2.5px dashed var(--accent);border-radius:16px;background:var(--accent-soft);display:none;align-items:center;justify-content:center;z-index:20;pointer-events:none}
@@ -143,20 +141,8 @@ body.dropping #dropzone{display:flex}
       <div class="name"><span id="pName">—</span><span class="chip" id="pClass"></span></div>
       <div id="dims">—</div>
 
-      <div class="subhead">Filament color</div>
-      <div class="swatches" id="swatches"></div>
-      <div class="customwrap">
-        <input type="color" id="customColor" value="#5c4033" title="Custom color">
-        <span class="caption">Custom color · <span id="colorName">—</span></span>
-      </div>
-
-      <div class="subhead">Finish</div>
-      <div class="seg" id="finishSeg">
-        <button data-f="matte">Matte</button>
-        <button data-f="basic" class="on">Basic</button>
-        <button data-f="silk">Silk</button>
-      </div>
-      <div class="caption">Matte hides layer lines · Silk adds sheen</div>
+      <div id="filaments"></div>
+      <div class="caption" id="colorName">—</div>
 
       <div class="subhead">Position <span class="caption">(mm)</span></div>
       <div class="posrow"><span class="poslabel"><b>X</b> left – right</span>
@@ -194,7 +180,7 @@ body.dropping #dropzone{display:flex}
       </div>
     </div>
 
-    <div id="sidefoot"><b>Bloo</b> works with any STL or OBJ — with extra assembly smarts for the <b>Atomic Stack</b> by Thunder Butter Designs. Colors are on-screen approximations of common PLA shades.</div>
+    <div id="sidefoot"><b>Bloo</b> works with any STL or OBJ — with extra assembly smarts for the <b>Atomic Stack</b> by Thunder Butter Designs. Swatches use Bambu Lab's official hex codes for PLA Basic, PETG Translucent, and TPU 95A HF; on-screen shades are approximations.</div>
   </aside>
 
   <main id="stage">
@@ -207,6 +193,7 @@ body.dropping #dropzone{display:flex}
       <button class="btn tiny" id="fitBtn">Fit view</button>
       <button class="btn tiny" id="shotBtn">Snapshot</button>
       <button class="btn tiny" id="themeBtn" title="Light / dark">◐</button>
+      <a class="btn tiny" id="ghBtn" href="https://github.com/taktekhq/bloo" target="_blank" rel="noopener" title="View the source on GitHub"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg> GitHub</a>
     </div>
     <div id="hintbar">drag to move · shift-drag = box select · ⌘/Ctrl-click toggles one part · edges snap to nearby parts (Alt bypasses) · Ctrl/⌘+Z undo · right-drag = pan</div>
 
@@ -217,6 +204,10 @@ body.dropping #dropzone{display:flex}
         <p>Drop STL or OBJ files anywhere on this page. If they were exported in place, they'll snap together into the full assembly automatically — then click any part and try filament colors.</p>
         <button class="btn accent" id="chooseBtn">Choose files…</button>
         <p class="caption tip">Tip: keep the original filenames so the parts are recognized.</p>
+        <div id="demoRow">
+          <button class="btn" id="demoBtn">✳ No files handy? Try the demo</button>
+          <p class="caption" id="demoCredit"></p>
+        </div>
       </div>
     </div>
 
@@ -233,13 +224,24 @@ body.dropping #dropzone{display:flex}
 if (typeof THREE === "undefined"){ document.getElementById("loadfail").style.display="flex"; return; }
 
 /* ================= palette & part knowledge ================= */
-const PALETTE = [
-  ["Jade White","#F2F0EA"],["Beige","#EFE0CB"],["Latte","#D8C4A6"],["Gold","#E4BD68"],["Sunflower","#FEC600"],["Orange","#FF6A13"],
-  ["Terracotta","#BE5B33"],["Red","#C12E1F"],["Magenta","#EC008C"],["Pink","#F55A74"],["Purple","#5E43B7"],["Blue","#0A2989"],
-  ["Marine","#0078BF"],["Cyan","#0086D6"],["Turquoise","#00B1B7"],["Green","#00AE42"],["Mistletoe","#3F8E43"],["Olive","#6F8452"],
-  ["Cocoa","#6F4E37"],["Walnut","#5C4033"],["Brown","#9D432C"],["Grey","#8E9089"],["Silver","#A6A9AA"],["Charcoal","#3B3B40"],["Black","#141414"]
+/* Official Bambu Lab hex codes for the filament lines on hand. */
+const FILAMENTS = [
+  { id:"pla", label:"PLA Basic", finish:{rough:0.45, metal:0.02, opacity:1}, colors:[
+    ["Jade White","#FFFFFF"],["Beige","#F7E6DE"],["Gold","#E4BD68"],["Sunflower Yellow","#FEC600"],["Yellow","#F4EE2A"],["Orange","#FF6A13"],
+    ["Pink","#F55A74"],["Hot Pink","#F5547C"],["Magenta","#EC008C"],["Red","#C12E1F"],["Maroon Red","#9D2235"],["Purple","#5E43B7"],
+    ["Indigo Purple","#482960"],["Blue","#0A2989"],["Cyan","#0086D6"],["Turquoise","#00B1B7"],["Bambu Green","#00AE42"],["Mistletoe Green","#3F8E43"],
+    ["Bronze","#847D48"],["Cocoa Brown","#6F5034"],["Brown","#9D432C"],["Silver","#A6A9AA"],["Light Gray","#D1D3D5"],["Gray","#8E9089"],
+    ["Blue Gray","#5B6579"],["Black","#000000"]
+  ]},
+  { id:"petg", label:"PETG Translucent", finish:{rough:0.15, metal:0.0, opacity:0.6}, colors:[
+    ["Translucent Gray","#8E8E8E"],["Translucent Brown","#C9A381"],["Translucent Olive","#748C45"],["Translucent Teal","#77EDD7"],
+    ["Translucent Light Blue","#61B0FF"],["Translucent Purple","#D6ABFF"],["Translucent Pink","#F9C1BD"],["Translucent Orange","#FF911A"]
+  ]},
+  { id:"tpu", label:"TPU 95A HF", finish:{rough:0.78, metal:0.0, opacity:1}, colors:[
+    ["White","#FFFFFF"],["Yellow","#F3E600"],["Blue","#0072CE"],["Red","#C8102E"],["Gray","#898D8D"],["Black","#101820"]
+  ]}
 ];
-const FINISH = { matte:{rough:0.85, metal:0.0}, basic:{rough:0.42, metal:0.03}, silk:{rough:0.25, metal:0.55} };
+const FINISH = {}; for(const f of FILAMENTS) FINISH[f.id]=f.finish;
 
 function classify(name){
   const n = name.toLowerCase();
@@ -254,8 +256,8 @@ function classify(name){
   if (/drawer/.test(n)) return /flut/.test(n) ? "drawer-fluted" : "drawer";
   return null;
 }
-const DEFAULT_COLOR = { "leg":"#141414","valet":"#F2F0EA","container-bottom":"#5C4033","container-middle":"#5C4033",
-  "container-top":"#5C4033","drawer":"#F2F0EA","drawer-fluted":"#BE5B33" };
+const DEFAULT_COLOR = { "leg":"#000000","valet":"#FFFFFF","container-bottom":"#6F5034","container-middle":"#6F5034",
+  "container-top":"#6F5034","drawer":"#FFFFFF","drawer-fluted":"#9D432C" };
 function classLabel(c){ if(!c) return "part"; if(c.startsWith("container")) return c.replace("-"," "); if(c==="drawer-fluted") return "fluted drawer"; return c; }
 function prettyName(f){ return f.replace(/\.(stl|obj)$/i,"").replace(/^AtomicStack_/i,"").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/_/g," "); }
 
@@ -328,24 +330,26 @@ function bboxSize(mesh){ return bbox(mesh).getSize(new THREE.Vector3()); }
 function bboxCenter(mesh){ return bbox(mesh).getCenter(new THREE.Vector3()); }
 
 function makeMaterial(hex, finish){
-  const f=FINISH[finish];
+  const f=FINISH[finish]||FINISH.pla;
   const m=new THREE.MeshStandardMaterial({roughness:f.rough, metalness:f.metal});
+  if(f.opacity<1){ m.transparent=true; m.opacity=f.opacity; }
   m.color.set(hex).convertSRGBToLinear();
   m.envMapIntensity = 0.75;
   return m;
 }
 function setColor(part,hex){ part.color=hex; part.mesh.material.color.set(hex).convertSRGBToLinear(); refreshList(); syncInspector(); }
-function setFinish(part,f){ part.finish=f; const p=FINISH[f]; part.mesh.material.roughness=p.rough; part.mesh.material.metalness=p.metal; syncInspector(); }
+function setFinish(part,f){ part.finish=f; const p=FINISH[f]||FINISH.pla; const m=part.mesh.material;
+  m.roughness=p.rough; m.metalness=p.metal; m.transparent=p.opacity<1; m.opacity=p.opacity; m.needsUpdate=true; syncInspector(); }
 
 function addPart(geometry, filename){
   const cls = classify(filename);
   const name = prettyName(filename);
   const color = DEFAULT_COLOR[cls] || "#A6A9AA";
-  const mesh = new THREE.Mesh(geometry, makeMaterial(color,"basic"));
+  const mesh = new THREE.Mesh(geometry, makeMaterial(color,"pla"));
   mesh.castShadow = mesh.receiveShadow = true;
   scene.add(mesh);
   const d = geometry.userData && geometry.userData.design;
-  const part={id:idSeq++, name, cls, mesh, color, finish:"basic", visible:true,
+  const part={id:idSeq++, name, cls, mesh, color, finish:"pla", visible:true,
               design: d? new THREE.Vector3(d.x,d.y,d.z) : null};
   mesh.userData.part = part;
   parts.push(part);
@@ -1077,34 +1081,28 @@ function refreshList(){
 }
 
 const insp=document.getElementById("inspector");
-const swWrap=document.getElementById("swatches");
-for(const [name,hex] of PALETTE){
-  const b=document.createElement("button");
-  b.className="sw"; b.style.background=`radial-gradient(circle at 34% 28%, ${hex}, ${hex})`;
-  b.style.backgroundColor=hex; b.title=name; b.dataset.hex=hex; b.dataset.name=name;
-  b.addEventListener("click",()=>{ if(!selSet.size) return; pushHistory(); for(const p of selSet) setColor(p,hex); markSwatch(hex); });
-  swWrap.appendChild(b);
+const filWrap=document.getElementById("filaments");
+for(const line of FILAMENTS){
+  const h=document.createElement("div"); h.className="subhead"; h.textContent=line.label;
+  const grid=document.createElement("div"); grid.className="swatches";
+  for(const [name,hex] of line.colors){
+    const b=document.createElement("button");
+    b.className="sw"; b.style.backgroundColor=line.finish.opacity<1? hex+"C0" : hex;
+    b.title=`${line.label} · ${name}`; b.dataset.hex=hex; b.dataset.name=name; b.dataset.fil=line.id;
+    b.addEventListener("click",()=>{ if(!selSet.size) return; pushHistory();
+      for(const p of selSet){ setColor(p,hex); setFinish(p,line.id); } markSwatch(); });
+    grid.appendChild(b);
+  }
+  filWrap.appendChild(h); filWrap.appendChild(grid);
 }
-function markSwatch(hex){
-  let nm="Custom";
-  swWrap.querySelectorAll(".sw").forEach(s=>{
-    const on=s.dataset.hex.toLowerCase()===hex.toLowerCase();
-    s.classList.toggle("on",on); if(on) nm=s.dataset.name;
+function markSwatch(){
+  let nm="—";
+  filWrap.querySelectorAll(".sw").forEach(s=>{
+    const on=!!selected && s.dataset.hex.toLowerCase()===selected.color.toLowerCase() && s.dataset.fil===selected.finish;
+    s.classList.toggle("on",on); if(on) nm=s.title;
   });
   document.getElementById("colorName").textContent=nm;
 }
-document.getElementById("customColor").addEventListener("input",e=>{
-  if(!selSet.size) return;
-  coalescedPush("color");
-  for(const p of selSet) setColor(p,e.target.value);
-  markSwatch(e.target.value);
-});
-
-document.getElementById("finishSeg").addEventListener("click",e=>{
-  const f=e.target.dataset.f; if(!f||!selSet.size) return;
-  pushHistory();
-  for(const p of selSet) setFinish(p,f);
-});
 document.querySelectorAll(".stepbtn").forEach(b=>b.addEventListener("click",()=>{
   if(!selSet.size) return;
   nudgeAxis(b.dataset.ax, +b.dataset.d);
@@ -1178,9 +1176,7 @@ function syncInspector(){
   if(document.activeElement.id!=="posX") document.getElementById("posX").value=c.x.toFixed(1);
   if(document.activeElement.id!=="posY") document.getElementById("posY").value=b.min.y.toFixed(1);
   if(document.activeElement.id!=="posZ") document.getElementById("posZ").value=c.z.toFixed(1);
-  markSwatch(selected.color);
-  document.querySelectorAll("#finishSeg button").forEach(x=>x.classList.toggle("on",x.dataset.f===selected.finish));
-  document.getElementById("customColor").value=selected.color;
+  markSwatch();
 }
 
 /* ================= scene buttons ================= */
@@ -1238,6 +1234,39 @@ window.addEventListener("dragleave",e=>{e.preventDefault(); if(--dragDepth<=0){d
 window.addEventListener("drop",e=>{
   e.preventDefault(); dragDepth=0; document.body.classList.remove("dropping");
   if(e.dataTransfer&&e.dataTransfer.files.length) loadFiles(e.dataTransfer.files);
+});
+
+/* ---- demo model, served from demo/ next to this page ---- */
+const DEMO_DIR="demo/";
+let demo=null;
+fetch(DEMO_DIR+"manifest.json").then(r=>r.ok?r.json():null).then(m=>{
+  if(!m || !Array.isArray(m.files) || !m.files.length) return;
+  demo=m;
+  const credit=document.getElementById("demoCredit");
+  credit.append("Demo model: ");
+  if(m.url){
+    const a=document.createElement("a");
+    a.href=m.url; a.target="_blank"; a.rel="noopener";
+    a.textContent=m.name||"original post";
+    credit.appendChild(a);
+  } else credit.append(m.name||"");
+  if(m.credit) credit.append(` by ${m.credit}`);
+  document.getElementById("demoRow").style.display="block";
+}).catch(()=>{});   /* opened from disk, or no demo shipped — the row just stays hidden */
+
+document.getElementById("demoBtn").addEventListener("click",async()=>{
+  if(!demo) return;
+  const btn=document.getElementById("demoBtn"), label=btn.textContent;
+  btn.disabled=true; btn.textContent="Fetching parts…";
+  try{
+    const files=await Promise.all(demo.files.map(async name=>{
+      const r=await fetch(DEMO_DIR+encodeURIComponent(name));
+      if(!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
+      return new File([await r.arrayBuffer()], name);
+    }));
+    await loadFiles(files);
+  }catch(e){ console.error(e); toast("Couldn't fetch the demo files — check your connection and try again."); }
+  btn.disabled=false; btn.textContent=label;
 });
 
 /* ================= toasts & loop ================= */
