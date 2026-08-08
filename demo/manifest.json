@@ -2,5 +2,12 @@
   "name": "Atomic Stack",
   "credit": "Thunder Butter Designs",
   "url": "https://www.printables.com/model/1784047-atomic-stack-mcm-modular-drawer-valet-system",
-  "files": []
+  "files": [
+    "DrawerContainer_Leg.stl",
+    "AtomicStack_BottomDrawerContainer.stl",
+    "AtomicStack_MiddleDrawerContainer.stl",
+    "AtomicStack_FlatFrontDrawer.stl",
+    "AtomicStack_FlutedDrawer.stl",
+    "AtomicStack_ValetTray.stl"
+  ]
 }
